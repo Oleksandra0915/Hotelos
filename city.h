@@ -1,8 +1,7 @@
-// city.h
 #ifndef CITY_H
 #define CITY_H
 
-#define MAX_CITIES 5
+#define MAX_CITIES 10
 #define MAX_CITY_NAME 50
 
 typedef struct {
@@ -17,4 +16,4 @@ void initializeCities();
 void showCities();
 int getCityChoice();
 
-#endif // CITY_H
+#endif
