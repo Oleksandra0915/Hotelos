@@ -3,80 +3,23 @@
 #include "booking.h"
 #include "room.h"
 
-void bookHotelRoom(Room rooms[], int numRooms) {
-    int num;
-    char name[MAX_NAME];
-
-    showHotelRooms(rooms, numRooms);
-    printf("\nВведіть номер для бронювання: ");
-    scanf("%d", &num);
-
-    if (num < 1 || num > numRooms) {
-        printf("Невірний номер.\n");
-        return;
-    }
-
-    if (rooms[num - 1].isBooked) {
-        printf("Номер %d вже заброньований гостем %s.\n", num, rooms[num-1].guestName);
-        return;
-    }
-
-    printf("Ім'я гостя: ");
-    getchar();
-    fgets(name, MAX_NAME, stdin);
-    name[strcspn(name, "\n")] = 0;
-
-    rooms[num - 1].isBooked = 1;
-    strcpy(rooms[num - 1].guestName, name);
-
-    printf("Номер %d успішно заброньовано на ім'я %s!\n", num, name);
+void createBooking(Booking* booking, int id, const char* customerName) {
+    booking->id = id;
+    strcpy(booking->customerName, customerName);
 }
 
-void showHotelBookings(const Room rooms[], int numRooms) {
-    printf("\n--- Список бронювань в цьому готелі ---\n");
-    int found = 0;
-    for (int i = 0; i < numRooms; i++) {
+void showHotelBookingsInBookingC(Room rooms[], int count) {
+    int foundBookings = 0;
+    printf("\n--- My Bookings ---\n");
+    for (int i = 0; i < count; i++) {
         if (rooms[i].isBooked) {
-            printf("Номер %d (Тип: ", rooms[i].roomNumber);
-            switch (rooms[i].type) {
-                case SINGLE: printf("Одномісний"); break;
-                case DOUBLE: printf("Двомісний"); break;
-                case SUITE:  printf("Люкс"); break;
+            for (int j = 0; j < rooms[i].bookingsCount; j++) {
+                printf("Room: %d, Client: %s (Booking ID: %d)\n", rooms[i].roomNumber, rooms[i].bookings[j].customerName, rooms[i].bookings[j].id);
+                foundBookings = 1;
             }
-            printf(", Ціна: %d грн) - Заброньовано на ім'я: %s\n", rooms[i].price, rooms[i].guestName);
-            found = 1;
         }
     }
-    if (!found) {
-        printf("Жодного бронювання немає в цьому готелі.\n");
+    if (!foundBookings) {
+        printf("No active bookings.\n");
     }
-}
-
-void cancelHotelBooking(Room rooms[], int numRooms) {
-    int num;
-    printf("\n--- Скасування бронювання ---\n");
-    showHotelBookings(rooms, numRooms);
-
-    if (numRooms == 0) {
-         printf("Немає номерів для скасування.\n");
-         return;
-    }
-
-    printf("Введіть номер для скасування бронювання: ");
-    scanf("%d", &num);
-
-    if (num < 1 || num > numRooms) {
-        printf("Невірний номер.\n");
-        return;
-    }
-
-    if (!rooms[num - 1].isBooked) {
-        printf("Номер %d не заброньований.\n", num);
-        return;
-    }
-
-    printf("Скасування бронювання для номера %d гостя %s...\n", num, rooms[num-1].guestName);
-    rooms[num - 1].isBooked = 0;
-    strcpy(rooms[num - 1].guestName, "");
-    printf("Бронювання номера %d успішно скасовано.\n", num);
 }

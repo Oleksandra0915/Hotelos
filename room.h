@@ -1,7 +1,11 @@
 #ifndef ROOM_H
 #define ROOM_H
 
-#define MAX_NAME 100
+#include "booking.h"
+
+typedef struct Hotel Hotel;
+
+#define MAX_BOOKINGS_PER_ROOM 5
 
 typedef enum {
     SINGLE,
@@ -9,18 +13,22 @@ typedef enum {
     SUITE
 } RoomType;
 
-typedef struct {
+typedef struct Room {
     int roomNumber;
-    int isBooked;
-    char guestName[MAX_NAME];
     RoomType type;
     int price;
+    int isBooked;
+    Booking bookings[MAX_BOOKINGS_PER_ROOM];
+    int bookingsCount;
 } Room;
 
-struct Hotel;
+void addRoomToHotel(Hotel* hotel, int roomNum, RoomType type, int price);
 
-void initializeHotelRooms(Room rooms[], int numRooms);
-void showHotelRooms(const Room rooms[], int numRooms);
-void addRoomToHotel(struct Hotel* hotel, int roomNum, RoomType type, int price);
+void showRoomType(RoomType type);
+void showHotelRooms(Room rooms[], int count);
+void bookHotelRoom(Room rooms[], int count);
+void showHotelBookings(Room rooms[], int count);
+void cancelHotelBooking(Room rooms[], int count);
+Room* findRoomByNumber(Room rooms[], int count, int roomNumber);
 
 #endif

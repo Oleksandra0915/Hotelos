@@ -1,18 +1,20 @@
 #ifndef PRICE_H
 #define PRICE_H
 
-#define NUM_PRICE_RANGES 4
+#define MAX_PRICE_RANGES 5
+#define MAX_PRICE_RANGE_NAME 50
 
 typedef struct {
     int id;
-    int minPrice;
-    int maxPrice;
-    char description[50];
+    char name[MAX_PRICE_RANGE_NAME];
 } PriceRange;
 
-extern PriceRange priceRanges[NUM_PRICE_RANGES];
+extern PriceRange priceRanges[MAX_PRICE_RANGES];
+extern int priceRangesCount;
+
 void initializePriceRanges();
 void showPriceRanges();
 int getPriceRangeChoice();
+const char* getPriceRangeName(int rangeId);
 
 #endif

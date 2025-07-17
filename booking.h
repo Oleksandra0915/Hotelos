@@ -1,10 +1,11 @@
 #ifndef BOOKING_H
 #define BOOKING_H
 
-#include "room.h"
+#define MAX_CUSTOMER_NAME 50
 
-void bookHotelRoom(Room rooms[], int numRooms);
-void showHotelBookings(const Room rooms[], int numRooms);
-void cancelHotelBooking(Room rooms[], int numRooms);
+typedef struct Booking {
+    int id;
+    char customerName[MAX_CUSTOMER_NAME];
+} Booking;
 
 #endif

@@ -15,5 +15,6 @@ extern int citiesCount;
 void initializeCities();
 void showCities();
 int getCityChoice();
+const char* getCityName(int cityId);
 
 #endif

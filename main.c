@@ -19,24 +19,24 @@ int main() {
     int choice;
     do {
         displayMainMenu();
-        printf("Виберіть дію: ");
+        printf("Select action: ");
         while (scanf("%d", &choice) != 1) {
-            printf("Невірний ввід. Будь ласка, введіть число: ");
+            printf("Invalid input. Please enter a number: ");
             while (getchar() != '\n');
         }
         while (getchar() != '\n');
         processMainMenuChoice(choice);
     } while (choice != 0);
 
-    printf("Дякуємо за користування системою бронювання готелів!\n");
+    printf("Thank you for using the hotel booking system!\n");
     return 0;
 }
 
 void displayMainMenu() {
-    printf("\n--- Головне меню ---\n");
-    printf("1. Операції з готелями\n");
-    printf("2. Показати всі готелі\n");
-    printf("0. Вихід\n");
+    printf("\n--- Main Menu ---\n");
+    printf("1. Hotel Operations\n");
+    printf("2. Show all hotels\n");
+    printf("0. Exit\n");
 }
 
 void processMainMenuChoice(int choice) {
@@ -50,7 +50,7 @@ void processMainMenuChoice(int choice) {
         case 0:
             break;
         default:
-            printf("Невірна дія. Будь ласка, спробуйте ще раз.\n");
+            printf("Invalid action. Please try again.\n");
             break;
     }
 }
@@ -63,16 +63,16 @@ void handleHotelOperations() {
 
     int subChoice;
     do {
-        printf("\n--- Операції з готелями ---\n");
-        printf("1. Фільтрувати готелі за містом\n");
-        printf("2. Фільтрувати готелі за ціновим діапазоном\n");
-        printf("3. Фільтрувати готелі за містом ТА ціновим діапазоном\n");
-        printf("4. Показати всі готелі\n");
-        printf("5. Вибрати готель для бронювання/перегляду номерів\n");
-        printf("0. Повернутися в головне меню\n");
-        printf("Виберіть дію: ");
+        printf("\n--- Hotel Operations ---\n");
+        printf("1. Filter hotels by city\n");
+        printf("2. Filter hotels by price range\n");
+        printf("3. Filter hotels by city AND price range\n");
+        printf("4. Show all hotels\n");
+        printf("5. Select a hotel for booking/room viewing\n");
+        printf("0. Return to main menu\n");
+        printf("Select action: ");
         while (scanf("%d", &subChoice) != 1) {
-            printf("Невірний ввід. Будь ласка, введіть число: ");
+            printf("Invalid input. Please enter a number: ");
             while (getchar() != '\n');
         }
         while (getchar() != '\n');
@@ -102,24 +102,24 @@ void handleHotelOperations() {
                 break;
             case 5:
                 showHotels();
-                printf("Введіть ID готелю, який ви хочете вибрати: ");
+                printf("Enter the ID of the hotel you want to select: ");
                 while (scanf("%d", &hotelId) != 1) {
-                    printf("Невірний ввід. Будь ласка, введіть число: ");
+                    printf("Invalid input. Please enter a number: ");
                     while (getchar() != '\n');
                 }
                 while (getchar() != '\n');
                 selectedHotel = findHotelById(hotelId);
                 if (selectedHotel != NULL) {
-                    printf("Вибрано готель: %s\n", selectedHotel->name);
+                    printf("Selected hotel: %s\n", selectedHotel->name);
                     handleBookingOperations(selectedHotel);
                 } else {
-                    printf("Готель з ID %d не знайдено.\n", hotelId);
+                    printf("Hotel with ID %d not found.\n", hotelId);
                 }
                 break;
             case 0:
                 break;
             default:
-                printf("Невірна дія. Будь ласка, спробуйте ще раз.\n");
+                printf("Invalid action. Please try again.\n");
                 break;
         }
     } while (subChoice != 0);
@@ -127,21 +127,21 @@ void handleHotelOperations() {
 
 void handleBookingOperations(Hotel* selectedHotel) {
     if (selectedHotel == NULL) {
-        printf("Готель не вибрано.\n");
+        printf("No hotel selected.\n");
         return;
     }
 
     int subChoice;
     do {
-        printf("\n--- Операції з номерами готелю '%s' ---\n", selectedHotel->name);
-        printf("1. Показати всі номери\n");
-        printf("2. Забронювати номер\n");
-        printf("3. Показати мої бронювання\n");
-        printf("4. Скасувати бронювання\n");
-        printf("0. Повернутися до вибору готелю\n");
-        printf("Виберіть дію: ");
+        printf("\n--- Operations with rooms in hotel '%s' ---\n", selectedHotel->name);
+        printf("1. Show all rooms\n");
+        printf("2. Book a room\n");
+        printf("3. Show my bookings\n");
+        printf("4. Cancel booking\n");
+        printf("0. Return to hotel selection\n");
+        printf("Select action: ");
         while (scanf("%d", &subChoice) != 1) {
-            printf("Невірний ввід. Будь ласка, введіть число: ");
+            printf("Invalid input. Please enter a number: ");
             while (getchar() != '\n');
         }
         while (getchar() != '\n');
@@ -162,7 +162,7 @@ void handleBookingOperations(Hotel* selectedHotel) {
             case 0:
                 break;
             default:
-                printf("Невірна дія. Будь ласка, спробуйте ще раз.\n");
+                printf("Invalid action. Please try again.\n");
                 break;
         }
     } while (subChoice != 0);

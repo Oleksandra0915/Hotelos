@@ -1,115 +1,82 @@
 #include <stdio.h>
 #include <string.h>
-#include "hotel.h"
-#include "city.h"
-#include "room.h"
-#include "price.h"
+#include "hotel.h" 
 
 Hotel hotels[MAX_HOTELS];
 int hotelsCount = 0;
 
 void initializeHotels() {
-    if (citiesCount == 0) {
-        initializeCities();
+    hotelsCount = 0;
+
+    addHotel("Grand Hotel Kyiv", 1, 1);
+    addHotel("Lviv Plaza", 2, 2);
+    addHotel("Odesa Beach Resort", 3, 3);
+    addHotel("Kyiv City Stay", 1, 2);
+    addHotel("Lviv Boutique", 2, 1);
+
+    if (hotelsCount > 0) {
+        addRoomToHotel(&hotels[0], 101, SINGLE, 800);
+        addRoomToHotel(&hotels[0], 102, DOUBLE, 1200);
+        addRoomToHotel(&hotels[0], 103, SUITE, 2500);
     }
-    initializePriceRanges();
+    if (hotelsCount > 1) {
+        addRoomToHotel(&hotels[1], 201, SINGLE, 750);
+        addRoomToHotel(&hotels[1], 202, DOUBLE, 1100);
+    }
+}
 
-    hotels[hotelsCount].id = ++hotelsCount;
-    strcpy(hotels[hotelsCount-1].name, "Гранд Готель Київ");
-    hotels[hotelsCount-1].city = cities[0];
-    hotels[hotelsCount-1].priceRange = priceRanges[1];
-
-    hotels[hotelsCount-1].roomsCount = 0;
-    addRoomToHotel(&hotels[hotelsCount-1], 101, SINGLE, 800);
-    addRoomToHotel(&hotels[hotelsCount-1], 102, DOUBLE, 1200);
-    addRoomToHotel(&hotels[hotelsCount-1], 103, SUITE, 1500);
-
-    hotels[hotelsCount].id = ++hotelsCount;
-    strcpy(hotels[hotelsCount-1].name, "Львівська Опера");
-    hotels[hotelsCount-1].city = cities[1];
-    hotels[hotelsCount-1].priceRange = priceRanges[0];
-
-    hotels[hotelsCount-1].roomsCount = 0;
-    addRoomToHotel(&hotels[hotelsCount-1], 201, SINGLE, 400);
-    addRoomToHotel(&hotels[hotelsCount-1], 202, DOUBLE, 650);
-
-    hotels[hotelsCount].id = ++hotelsCount;
-    strcpy(hotels[hotelsCount-1].name, "Морський Бриз");
-    hotels[hotelsCount-1].city = cities[2];
-    hotels[hotelsCount-1].priceRange = priceRanges[2];
-
-    hotels[hotelsCount-1].roomsCount = 0;
-    addRoomToHotel(&hotels[hotelsCount-1], 301, SUITE, 2000);
-    addRoomToHotel(&hotels[hotelsCount-1], 302, DOUBLE, 1800);
-    addRoomToHotel(&hotels[hotelsCount-1], 303, SINGLE, 1600);
-
-    hotels[hotelsCount].id = ++hotelsCount;
-    strcpy(hotels[hotelsCount-1].name, "Харківська Фортеця");
-    hotels[hotelsCount-1].city = cities[3];
-    hotels[hotelsCount-1].priceRange = priceRanges[1];
-
-    hotels[hotelsCount-1].roomsCount = 0;
-    addRoomToHotel(&hotels[hotelsCount-1], 401, DOUBLE, 900);
-    addRoomToHotel(&hotels[hotelsCount-1], 402, SINGLE, 750);
-
-    hotels[hotelsCount].id = ++hotelsCount;
-    strcpy(hotels[hotelsCount-1].name, "Дніпровські Зорі");
-    hotels[hotelsCount-1].city = cities[4];
-    hotels[hotelsCount-1].priceRange = priceRanges[3];
-
-    hotels[hotelsCount-1].roomsCount = 0;
-    addRoomToHotel(&hotels[hotelsCount-1], 501, SUITE, 3500);
-    addRoomToHotel(&hotels[hotelsCount-1], 502, DOUBLE, 3200);
+void addHotel(const char* name, int cityId, int priceRangeId) {
+    if (hotelsCount < MAX_HOTELS) {
+        hotels[hotelsCount].id = hotelsCount + 1;
+        strcpy(hotels[hotelsCount].name, name);
+        hotels[hotelsCount].cityId = cityId;
+        hotels[hotelsCount].priceRangeId = priceRangeId;
+        hotels[hotelsCount].roomsCount = 0;
+        hotelsCount++;
+    } else {
+        printf("Cannot add more hotels. Maximum capacity reached.\n");
+    }
 }
 
 void showHotels() {
-    printf("\n--- Доступні готелі ---\n");
+    if (hotelsCount == 0) {
+        printf("No hotels available.\n");
+        return;
+    }
+    printf("\n--- Available Hotels ---\n");
     for (int i = 0; i < hotelsCount; i++) {
-        printf("%d. %s (%s, %s)\n",
-               hotels[i].id,
-               hotels[i].name,
-               hotels[i].city.name,
-               hotels[i].priceRange.description);
+        printf("ID: %d, Name: %s, City: %s, Price Range: %s\n",
+               hotels[i].id, hotels[i].name,
+               getCityName(hotels[i].cityId),
+               getPriceRangeName(hotels[i].priceRangeId));
     }
 }
 
-int getHotelChoice() {
-    int choice;
-    printf("Виберіть номер готелю: ");
-    while (scanf("%d", &choice) != 1 || choice < 1 || choice > hotelsCount) {
-        printf("Невірний вибір готелю. Будь ласка, введіть номер від 1 до %d: ", hotelsCount);
-        while (getchar() != '\n');
+void filterAndShowHotels(int cityId, int priceRangeId) {
+    int found = 0;
+    printf("\n--- Filtered Hotels ---\n");
+    for (int i = 0; i < hotelsCount; i++) {
+        int cityMatch = (cityId == 0 || hotels[i].cityId == cityId);
+        int priceMatch = (priceRangeId == 0 || hotels[i].priceRangeId == priceRangeId);
+
+        if (cityMatch && priceMatch) {
+            printf("ID: %d, Name: %s, City: %s, Price Range: %s\n",
+                   hotels[i].id, hotels[i].name,
+                   getCityName(hotels[i].cityId),
+                   getPriceRangeName(hotels[i].priceRangeId));
+            found = 1;
+        }
     }
-    while (getchar() != '\n');
-    return choice;
+    if (!found) {
+        printf("No hotels found matching the criteria.\n");
+    }
 }
 
-Hotel* findHotelById(int hotelId) {
+Hotel* findHotelById(int id) {
     for (int i = 0; i < hotelsCount; i++) {
-        if (hotels[i].id == hotelId) {
+        if (hotels[i].id == id) {
             return &hotels[i];
         }
     }
     return NULL;
-}
-
-void filterAndShowHotels(int cityChoice, int priceRangeChoice) {
-    printf("\n--- Результати пошуку готелів ---\n");
-    int foundCount = 0;
-    for (int i = 0; i < hotelsCount; i++) {
-        int cityMatch = (cityChoice == 0) || (hotels[i].city.id == cityChoice);
-        int priceMatch = (priceRangeChoice == 0) || (hotels[i].priceRange.id == priceRangeChoice);
-
-        if (cityMatch && priceMatch) {
-            printf("%d. %s (%s, %s)\n",
-                   hotels[i].id,
-                   hotels[i].name,
-                   hotels[i].city.name,
-                   hotels[i].priceRange.description);
-            foundCount++;
-        }
-    }
-    if (foundCount == 0) {
-        printf("Готелів за вказаними критеріями не знайдено.\n");
-    }
 }
